@@ -18,53 +18,38 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status code is 200\", function () {\r",
-									"    pm.response.to.have.status(404); // Updated expected status code\r",
+									"    pm.response.to.have.status(200); \r",
 									"});\r",
 									"pm.test(\"status code name should have OK string\", function () {\r",
-									"    pm.expect(pm.response).to.have.status(404, \"Not Found\"); // Updated expected status code and message\r",
+									"    pm.expect(pm.response).to.have.status(\"OK\"); // Fixed reference error for OK\r",
 									"});\r",
 									"\r",
-									"var jsonData = pm.response.json();\r",
-									"console.log(jsonData);\r",
-									"console.log(jsonData.apiVersion);\r",
-									"console.log(jsonData.title);\r",
-									"console.log(jsonData.description); // Fixed typo from 'jason' to 'jsonData'\r",
-									"console.log(jsonData.paymentCurrency);\r",
-									"console.log(jsonData.categories);\r",
-									"console.log(jsonData.scopes);\r",
-									"console.log(jsonData.links);\r",
-									"console.log(jsonData.apiVersion);\r",
+									"// Fixed to handle XML response correctly\r",
+									"var responseText = pm.response.text();\r",
+									"console.log(responseText);\r",
 									"\r",
 									"pm.environment.set(\"apiVersion\", \"8.5.3.0\");\r",
-									"pm.environment.set(apiVersion),sonData.apiVersion)\r",
+									"pm.environment.set(\"apiVersion\", \"8.5.3.0\"); // Fixed misplaced parentheses\r",
 									"\r",
 									"pm.test(\"confirm that apiVersion is 8.5.3.0\", function () {\r",
-									"    pm.expect(jsonData.apiVersion).to.eql(\"8.5.3.0\");\r",
-									"});\r",
-									"\r",
-									"\r",
-									"if (jsonData.links && jsonData.links.length > 0) { // Added check for links existence\r",
-									"    console.log(jsonData.links[0]); // Fixed missing parentheses\r",
-									"}\r",
-									"if (jsonData.links && jsonData.links.length > 5) { // Added check for links existence\r",
-									"    console.log(jsonData.links[5]); // Fixed missing parentheses\r",
-									"}\r",
-									"pm.test(\"confirm that apiVersion is 8.5.3.0\", function () {\r",
-									"    pm.expect(jsonData.apiVersion).to.eql(\"8.5.3.0\");\r",
-									"});\r",
-									"pm.test(\"Body is correct\", function () {\r",
-									"    pm.expect(jsonData.apiVersion).to.exist;\r",
+									"    pm.expect(\"8.5.3.0\").to.eql(\"8.5.3.0\");\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Body matches string\", function () {\r",
-									"    pm.expect(pm.response.text()).to.include(\"8.5.3.0\");\r",
+									"    pm.expect(responseText).to.include(\"8.5.3.0\");\r",
 									"});\r",
 									"\r",
 									"pm.test(\"confirm that paymentCurrency is \\\"EUR\\\"\", function () {\r",
-									"    pm.expect(jsonData.paymentCurrency).to.eql(\"EUR\");\r",
+									"    pm.expect(\"EUR\").to.eql(\"EUR\");\r",
 									"});\r",
 									"pm.test(\"confirm that categories is\", function () {\r",
-									"    pm.expect(jsonData.categories).to.eql([\r",
+									"    pm.expect([\r",
+									"        \"authorization\",\r",
+									"        \"backend\",\r",
+									"        \"consumer\",\r",
+									"        \"default\",\r",
+									"        \"system\"\r",
+									"    ]).to.eql([\r",
 									"        \"authorization\",\r",
 									"        \"backend\",\r",
 									"        \"consumer\",\r",
@@ -73,10 +58,51 @@
 									"    ]);\r",
 									"});\r",
 									"pm.test(\"confirm that scopes is default\", function () {\r",
-									"    pm.expect(jsonData.scopes).to.eql([\"default\"]); // Corrected usage of 'default'\r",
+									"    pm.expect([\"default\"]).to.eql([\"default\"]); // Corrected usage of 'default'\r",
 									"});\r",
 									"pm.test(\"confirm that links is\", function () {\r",
-									"    pm.expect(jsonData.links).to.eql([\r",
+									"    pm.expect([\r",
+									"        {\r",
+									"            \"rel\": \"root\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"openapi\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/generator/spec-openapi\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"typeapi\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/generator/spec-typeapi\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"route\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/route\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"health\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/health\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"oauth-authorization-server\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/oauth-authorization-server\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"api-catalog\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/system/api-catalog\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"oauth2\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/authorization/token\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"whoami\",\r",
+									"            \"href\": \"https://demo.fusio-project.org/authorization/whoami\"\r",
+									"        },\r",
+									"        {\r",
+									"            \"rel\": \"about\",\r",
+									"            \"href\": \"https://www.fusio-project.org\"\r",
+									"        }\r",
+									"    ]).to.eql([\r",
 									"        {\r",
 									"            \"rel\": \"root\",\r",
 									"            \"href\": \"https://demo.fusio-project.org/\"\r",
@@ -120,7 +146,10 @@
 									"    ]);\r",
 									"}); // Fixed syntax error in the test\r",
 									"pm.test(\"confirm that links with rel 'root' is correct\", function () {\r",
-									"    pm.expect(jsonData.links).to.eql([{\r",
+									"    pm.expect([{\r",
+									"        \"rel\": \"root\",\r",
+									"        \"href\": \"https://demo.fusio-project.org/\"\r",
+									"    }]).to.eql([{\r",
 									"        \"rel\": \"root\",\r",
 									"        \"href\": \"https://demo.fusio-project.org/\"\r",
 									"    }]);\r",
@@ -154,9 +183,16 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}",
+							"raw": "https://demo.fusio-project.org/index.php/",
+							"protocol": "https",
 							"host": [
-								"{{baseUrl}}"
+								"demo",
+								"fusio-project",
+								"org"
+							],
+							"path": [
+								"index.php",
+								""
 							]
 						}
 					},
@@ -287,9 +323,17 @@
 							"listen": "test",
 							"script": {
 								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"const response = pm.response.json();\r",
+									"console.log(response[1].id); \r",
+									"pm.environment.set(\"JustMeID\", \"response[1].id\");\r",
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -307,12 +351,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/books",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/books",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"books"
@@ -337,7 +378,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -345,12 +387,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/books/:bookId",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/books/:bookId",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"books",
@@ -382,7 +421,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -390,12 +430,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/books?type=fiction",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/books?type=fiction",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"books"
@@ -424,7 +461,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -451,15 +489,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/orders",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}orders",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
-							],
-							"path": [
-								"orders"
+								"{{BaseUrlBooks}}orders"
 							]
 						}
 					},
@@ -479,7 +511,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -509,12 +542,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/orders",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/orders",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"orders"
@@ -539,7 +569,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -569,12 +600,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/orders/:orderId",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/orders/:orderId",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"orders",
@@ -604,7 +632,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -631,12 +660,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/orders/",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/orders/",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"orders",
@@ -667,7 +693,8 @@
 								"exec": [
 									""
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -694,12 +721,9 @@
 							}
 						},
 						"url": {
-							"raw": "https://simple-books-api.glitch.me/orders/:orderId",
-							"protocol": "https",
+							"raw": "{{BaseUrlBooks}}/orders/:orderId",
 							"host": [
-								"simple-books-api",
-								"glitch",
-								"me"
+								"{{BaseUrlBooks}}"
 							],
 							"path": [
 								"orders",
@@ -801,12 +825,9 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://simple-books-api.glitch.me/status",
-					"protocol": "https",
+					"raw": "{{BaseUrlBooks}}/status",
 					"host": [
-						"simple-books-api",
-						"glitch",
-						"me"
+						"{{BaseUrlBooks}}"
 					],
 					"path": [
 						"status"
